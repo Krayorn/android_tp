@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import java.util.ArrayList
 
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -25,19 +24,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
         val myNews = myList[position]
-        holder.title.text = myNews.getTitle()
-        holder.author.text = myNews.getAuthor()
-
-        holder.title.setOnClickListener {
-            val date = myNews.getDate()
-            val context = holder.title.context
-            val text = "Written the $date"
-            val duration = Toast.LENGTH_SHORT
-
-            val toast = Toast.makeText(context, text, duration)
-            toast.show()
-        }
-
+        holder.title.text = myNews.title
+        holder.author.text = myNews.author
     }
 
     override fun getItemCount(): Int {

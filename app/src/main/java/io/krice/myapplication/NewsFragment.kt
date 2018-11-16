@@ -4,10 +4,16 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.*
+
 
 class NewsFragment: Fragment() {
 
@@ -19,23 +25,32 @@ class NewsFragment: Fragment() {
 
         recyclerView = view.findViewById(R.id.recycler_view)
 
-        mAdapter = RecyclerAdapter()
-        recyclerView?.adapter = mAdapter
-
         val mLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.layoutManager = mLayoutManager
 
-        var newsList: List<News> = listOf(
-                News(title = "MAJOR BREAKTHROUGH IN PHYSICS", author = "Sheldon Cooper", date = Date(12-11-2018)),
-                News(title = "Is 'Are' the new 'is' and are 'Is' the new 'Are", author = "A 2 years old kid", date = Date(11-11-2018)),
-                News(title = "'Japan and China don't exist", author = "Donald Trump", date = Date(10-11-2018)),
-                News(title = "Purge the Heretics", author = "Some Imperium dude", date = Date(9-11-2018)),
-                News(title = "Come, i have a 12 people cake for you", author = "My grandma", date = Date(8-11-2018))
-        )
+        val database = FirebaseDatabase.getInstance()
 
-        for (news in newsList) {
-            mAdapter!!.addData(news)
+        val newsList: MutableList<News> = mutableListOf()
+
+        val listener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                newsList.clear()
+                Log.d("news", dataSnapshot.toString())
+                dataSnapshot.children.mapNotNullTo(newsList) { it.getValue<News>(News::class.java) }
+                mAdapter = RecyclerAdapter()
+                recyclerView?.adapter = mAdapter
+                for (news in newsList) {
+                    Log.d("news", news.toString())
+                    mAdapter!!.addData(news)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
         }
+
+        database.reference.child("news").addListenerForSingleValueEvent(listener)
 
         return view
     }
@@ -47,25 +62,26 @@ class NewsFragment: Fragment() {
     }
 }
 
-open class News(title: String, author: String, date: Date) {
+open class News {
+    lateinit var author: String
+    lateinit var content : String
+    lateinit var summary : String
+    lateinit var date: String
+    lateinit var picture: String
+    lateinit var title: String
 
-    private var author: String = author
-    private var date: Date = date
-    private var title: String = title
+    fun News(): News { return this }
+
+    fun News(author: String, content: String, summary: String, title: String, picture: String): News {
+        this.author = author
+        this.content = content
+        this.summary = summary
+        this.title = title
+        this.picture = picture
+        return this
+    }
 
     override fun toString(): String {
         return "$title by $author the $date"
-    }
-
-    fun getTitle(): CharSequence? {
-        return title
-    }
-
-    fun getDate(): Any {
-        return date
-    }
-
-    fun getAuthor(): CharSequence? {
-        return author
     }
 }
