@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import java.util.ArrayList
 
-class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private val myList: MutableList<News> = mutableListOf()) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    private val myList = ArrayList<News>()
-
-    fun addData(data: News) {
-        myList.add(data)
+    fun updateContent(list: List<News>) {
+        this.myList.replaceContent(list)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
@@ -36,4 +35,9 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
         var title: TextView = itemView.findViewById(R.id.title)
         var author: TextView = itemView.findViewById(R.id.author)
     }
+}
+
+fun <T> MutableList<T>.replaceContent(list: List<T>) {
+    clear()
+    addAll(list)
 }

@@ -37,12 +37,7 @@ class NewsFragment: Fragment() {
                 newsList.clear()
                 Log.d("news", dataSnapshot.toString())
                 dataSnapshot.children.mapNotNullTo(newsList) { it.getValue<News>(News::class.java) }
-                mAdapter = RecyclerAdapter()
-                recyclerView?.adapter = mAdapter
-                for (news in newsList) {
-                    Log.d("news", news.toString())
-                    mAdapter!!.addData(news)
-                }
+                mAdapter?.updateContent(newsList)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -50,7 +45,9 @@ class NewsFragment: Fragment() {
             }
         }
 
-        database.reference.child("news").addListenerForSingleValueEvent(listener)
+        mAdapter = RecyclerAdapter()
+        recyclerView?.adapter = mAdapter
+        database.reference.child("news").addValueEventListener(listener)
 
         return view
     }
