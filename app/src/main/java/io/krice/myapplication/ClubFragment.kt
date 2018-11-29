@@ -14,7 +14,7 @@ class ClubFragment: Fragment() {
     }
 
     companion object {
-        fun newIntance(): ClubFragment {
+        fun newInstance(): ClubFragment {
             val clubInstance = ClubFragment()
             return clubInstance
         }

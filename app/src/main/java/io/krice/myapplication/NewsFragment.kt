@@ -1,18 +1,13 @@
 package io.krice.myapplication
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import java.util.*
 
 
 class NewsFragment: Fragment() {
@@ -25,35 +20,24 @@ class NewsFragment: Fragment() {
 
         recyclerView = view.findViewById(R.id.recycler_view)
 
-        val mLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val mLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL , false)
         recyclerView?.layoutManager = mLayoutManager
 
-        val database = FirebaseDatabase.getInstance()
-
-        val newsList: MutableList<News> = mutableListOf()
-
-        val listener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                newsList.clear()
-                Log.d("news", dataSnapshot.toString())
-                dataSnapshot.children.mapNotNullTo(newsList) { it.getValue<News>(News::class.java) }
-                mAdapter?.updateContent(newsList)
+        NewsLiveData().observe(this, Observer<MutableList<News>> { it ->
+            if (it != null) {
+                mAdapter?.updateContent(it)
             }
+        })
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
 
         mAdapter = RecyclerAdapter()
         recyclerView?.adapter = mAdapter
-        database.reference.child("news").addValueEventListener(listener)
 
         return view
     }
 
     companion object {
-        fun newIntance() : NewsFragment {
+        fun newInstance() : NewsFragment {
             return NewsFragment()
         }
     }

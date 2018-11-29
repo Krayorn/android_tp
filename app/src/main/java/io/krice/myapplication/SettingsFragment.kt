@@ -26,7 +26,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
 
         }
 
-        findPreference("settings_contact").setOnPreferenceClickListener {
+        findPreference("snettings_contact").setOnPreferenceClickListener {
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.type = "plain/text"
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("redaction@mgig.fr"))
@@ -43,7 +43,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
     }
 
     companion object {
-        fun newIntance() : SettingsFragment {
+        fun newInstance() : SettingsFragment {
             val settingsIntance = SettingsFragment()
             return settingsIntance
         }

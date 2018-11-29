@@ -14,7 +14,7 @@ class ForumFragment: Fragment() {
     }
 
     companion object {
-        fun newIntance(): ForumFragment {
+        fun newInstance(): ForumFragment {
             val forumInstance = ForumFragment()
             return forumInstance
         }

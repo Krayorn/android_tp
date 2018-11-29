@@ -8,11 +8,11 @@ import android.support.v7.widget.Toolbar
 
 class HomeActivity : AppCompatActivity() {
 
-    private val mNewsFragment = NewsFragment.newIntance()
-    private val mBooksFragment = BooksFragment.newIntance()
-    private val mClubFragment = ClubFragment.newIntance()
-    private val mSettingsFragment = SettingsFragment.newIntance()
-    private val mForumFragment = ForumFragment.newIntance()
+    private val mNewsFragment = NewsFragment.newInstance()
+    private val mBooksFragment = BooksFragment.newInstance()
+    private val mClubFragment = ClubFragment.newInstance()
+    private val mSettingsFragment = SettingsFragment.newInstance()
+    private val mForumFragment = ForumFragment.newInstance()
 
     private var mCurrentFragmentId = R.id.menu_news
 

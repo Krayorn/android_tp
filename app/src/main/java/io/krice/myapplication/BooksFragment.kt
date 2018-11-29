@@ -14,7 +14,7 @@ class BooksFragment: Fragment() {
     }
 
     companion object {
-        fun newIntance(): BooksFragment {
+        fun newInstance(): BooksFragment {
             val booksInstance = BooksFragment()
             return booksInstance
         }
